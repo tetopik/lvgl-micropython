@@ -16,7 +16,7 @@ from . import (
     scrub_build_folder
 )
 
-IDF_VER = '5.5.1'
+IDF_VER = '5.5.5'
 
 
 def get_partition_file_name(otp):
@@ -158,7 +158,7 @@ def get_espidf():
         ]
     ]
     print()
-    print(f'collecting ESP-IDF v5.5.1')
+    print(f'collecting ESP-IDF v5.5.5')
     print('this might take a while...')
     result, _ = spawn(cmd, spinner=True)
     if result != 0:
@@ -945,7 +945,7 @@ def submodules():
         ['./install.sh', 'all']
     ]
 
-    print(f'setting up ESP-IDF v5.5.1')
+    print(f'setting up ESP-IDF v5.5.5')
     print('this might take a while...')
     env = {k: v for k, v in os.environ.items()}
     env['IDF_PATH'] = os.path.abspath(idf_path)

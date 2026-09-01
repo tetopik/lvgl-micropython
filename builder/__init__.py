@@ -473,7 +473,7 @@ def get_lvgl():
         'git submodule update --init --depth=1 -- lib/lvgl'
     ]
     print()
-    print('collecting LVGL v9.4.0')
+    print('collecting LVGL v9.5.0')
     print('this might take a while...')
     result, _ = spawn(cmd_, spinner=True)
     if result != 0:
@@ -486,7 +486,7 @@ def get_micropython():
         'git submodule update --init --depth=1 -- lib/micropython',
     ]
     print()
-    print('collecting MicroPython 1.27.0')
+    print('collecting MicroPython 1.29.0')
     result, _ = spawn(cmd_, spinner=True)
     if result != 0:
         sys.exit(result)

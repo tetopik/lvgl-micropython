@@ -114,5 +114,3 @@ ext_mod/lvgl/yacctab.py
 
 # Local test files
 main.py
-# Generated stubs
-lvgl.pyi

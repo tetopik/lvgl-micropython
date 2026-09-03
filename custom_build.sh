@@ -7,6 +7,10 @@ BUILD_TAGS=mp$MP_VER"_lv$LV_VER"_idf$IDF_VER
 BUILD_PATH=firmwares/$BUILD_TAGS
 mkdir $BUILD_PATH
 
+if [ "$LV_VER" == "9.1.0" ]; then
+    git update-index --cacheinfo 160000,657fccd132ea1028d4d28964867fbd02373afc76,lib/lvgl
+fi
+
 DRIVERS="DISPLAY=ssd1306 DISPLAY=GC9A01 DISPLAY=ST7735 DISPLAY=st7789 DISPLAY=ili9341 DISPLAY=ili9488 INDEV=xpt2046"
 
 python3 make.py esp32 clean BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT --flash-size=16 --enable-uart-repl=n --enable-cdc-repl=y --enable-jtag-repl=n $DRIVERS &&\

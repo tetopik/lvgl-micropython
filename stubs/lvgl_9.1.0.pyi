@@ -1,51 +1,51 @@
 from typing import Union, ClassVar, Callable, List, Any, TypedDict, Optional
 
 
-fs_mode_t = int
-fs_res_t = int
+indev_mode_t = int
 thread_prio_t = int
-group_refocus_policy_t = int
-flex_flow_t = int
-grad_dir_t = int
-draw_sw_mask_line_side_t = int
-blend_mode_t = int
-gridnav_ctrl_t = int
-style_res_t = int
-text_align_t = int
-border_side_t = int
-state_t = int
-base_dir_t = int
-scroll_snap_t = int
-scrollbar_mode_t = int
+display_render_mode_t = int
+align_t = int
 span_overflow_t = int
-flag_t = int
-text_flag_t = int
-color_format_t = int
-palette_t = int
-opa_t = int
-text_decor_t = int
-font_glyph_format_t = int
-draw_sw_mask_res_t = int
+scrollbar_mode_t = int
+scroll_snap_t = int
 dir_t = int
-mode_t = int
-rb_color_t = int
-ctrl_t = int
+draw_sw_mask_res_t = int
+flag_t = int
+indev_type_t = int
+font_kerning_t = int
+font_glyph_format_t = int
+color_format_t = int
+flex_flow_t = int
+opa_t = int
+gridnav_ctrl_t = int
 draw_task_type_t = int
 type_t = int
-align_t = int
-flags_t = int
-indev_type_t = int
-indev_mode_t = int
-result_t = int
-span_mode_t = int
-display_rotation_t = int
-indev_state_t = int
-font_kerning_t = int
 part_t = int
-cover_res_t = int
+text_flag_t = int
+group_refocus_policy_t = int
 flex_align_t = int
-display_render_mode_t = int
+base_dir_t = int
+ctrl_t = int
+border_side_t = int
+grad_dir_t = int
+flags_t = int
+cover_res_t = int
+indev_state_t = int
+fs_res_t = int
+style_res_t = int
+text_align_t = int
+state_t = int
+result_t = int
+blend_mode_t = int
+text_decor_t = int
+rb_color_t = int
 grid_align_t = int
+span_mode_t = int
+palette_t = int
+display_rotation_t = int
+fs_mode_t = int
+draw_sw_mask_line_side_t = int
+mode_t = int
 style_prop_t = int
 grad_color_t = int
 event_code_t = int
@@ -231,6 +231,7 @@ class COLOR_FORMAT(object):
     RGB565: ClassVar[int] = ...
     ARGB8565: ClassVar[int] = ...
     RGB565A8: ClassVar[int] = ...
+    AL88: ClassVar[int] = ...
     RGB888: ClassVar[int] = ...
     ARGB8888: ClassVar[int] = ...
     XRGB8888: ClassVar[int] = ...
@@ -789,6 +790,8 @@ class EVENT(object):
     LEAVE: ClassVar[int] = ...
     HIT_TEST: ClassVar[int] = ...
     INDEV_RESET: ClassVar[int] = ...
+    HOVER_OVER: ClassVar[int] = ...
+    HOVER_LEAVE: ClassVar[int] = ...
     COVER_CHECK: ClassVar[int] = ...
     REFR_EXT_DRAW_SIZE: ClassVar[int] = ...
     DRAW_MAIN_BEGIN: ClassVar[int] = ...
@@ -993,6 +996,8 @@ class GRIDNAV_CTRL(object):
     NONE: ClassVar[int] = ...
     ROLLOVER: ClassVar[int] = ...
     SCROLL_FIRST: ClassVar[int] = ...
+    HORIZONTAL_MOVE_ONLY: ClassVar[int] = ...
+    VERTICAL_MOVE_ONLY: ClassVar[int] = ...
 
 
 class SYMBOL(object):
@@ -1170,6 +1175,12 @@ class color_t(object):
         ...
     
     def eq(self, c2: "color_t", /) -> bool:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def luminance(self, /) -> int:
         """
         No Docstrings Yet
         """
@@ -1601,7 +1612,7 @@ class _font_glyph_dsc_t_type(TypedDict, total=False):
     ofs_y: int = ...
     format: "font_glyph_format_t" = ...
     is_placeholder: int = ...
-    glyph_index: int = ...
+    gid: "font_glyph_dsc_gid_t" = ...
     entry: "cache_entry_t" = ...
 
 
@@ -1618,13 +1629,19 @@ class font_glyph_dsc_t(object):
 
     __SIZE__: ClassVar[int] = ...
 
-    def get_glyph_bitmap(self, arg0: int, arg1: "draw_buf_t", /) -> Any:
+    def get_glyph_bitmap(self, arg0: "draw_buf_t", /) -> Any:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_bitmap_fmt_txt(self, arg0: int, arg1: "draw_buf_t", /) -> Any:
+    def release_draw_data(self, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def get_bitmap_fmt_txt(self, arg0: "draw_buf_t", /) -> Any:
         """
         No Docstrings Yet
         """
@@ -1743,14 +1760,14 @@ class font_glyph_dsc_t(object):
         ...
 
     @property
-    def glyph_index(self) -> int:
+    def gid(self) -> "font_glyph_dsc_gid_t":
        """
        No Docstrings Yet
        """ 
        ...
 
-    @glyph_index.setter
-    def glyph_index(self, value: int) -> None:
+    @gid.setter
+    def gid(self, value: "font_glyph_dsc_gid_t") -> None:
         """
         No Docstrings Yet
         """
@@ -1765,6 +1782,55 @@ class font_glyph_dsc_t(object):
 
     @entry.setter
     def entry(self, value: "cache_entry_t") -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+
+
+
+class _font_glyph_dsc_gid_t_type(TypedDict, total=False):
+    index: int = ...
+    src: Any = ...
+
+
+
+class font_glyph_dsc_gid_t(object):
+    """
+    No Docstrings Yet
+    """
+    def __init__(self, args: Optional[_font_glyph_dsc_gid_t_type] = dict(), /) -> "font_glyph_dsc_gid_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    __SIZE__: ClassVar[int] = ...
+
+    @property
+    def index(self) -> int:
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @index.setter
+    def index(self, value: int) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
+    def src(self) -> Any:
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @src.setter
+    def src(self, value: Any) -> None:
         """
         No Docstrings Yet
         """
@@ -1889,6 +1955,12 @@ class draw_buf_t(object):
         """
         ...
     
+    def flush_cache(self, area: "area_t", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
     def clear(self, a: "area_t", /) -> None:
         """
         No Docstrings Yet
@@ -1901,13 +1973,13 @@ class draw_buf_t(object):
         """
         ...
     
-    def init(self, w: int, h: int, cf: "color_format_t", stride: int, data: Any, data_size: int, /) -> "result_t":
+    def dup(self, /) -> "draw_buf_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def dup(self, /) -> "draw_buf_t":
+    def init(self, w: int, h: int, cf: "color_format_t", stride: int, data: Any, data_size: int, /) -> "result_t":
         """
         No Docstrings Yet
         """
@@ -2061,11 +2133,11 @@ class _anim_t_type(TypedDict, total=False):
     repeat_delay: int = ...
     repeat_cnt: int = ...
     parameter: "anim_parameter_t" = ...
-    early_apply: int = ...
     last_timer_run: int = ...
     playback_now: int = ...
     run_round: int = ...
     start_cb_called: int = ...
+    early_apply: int = ...
 
 
 
@@ -2171,7 +2243,7 @@ class anim_t(object):
         """
         ...
     
-    def set_repeat_count(self, cnt: int, /) -> None:
+    def set_repeat_count(self, duration: int, /) -> None:
         """
         No Docstrings Yet
         """
@@ -2472,20 +2544,6 @@ class anim_t(object):
         ...
 
     @property
-    def early_apply(self) -> int:
-       """
-       No Docstrings Yet
-       """ 
-       ...
-
-    @early_apply.setter
-    def early_apply(self, value: int) -> None:
-        """
-        No Docstrings Yet
-        """
-        ...
-
-    @property
     def last_timer_run(self) -> int:
        """
        No Docstrings Yet
@@ -2536,6 +2594,20 @@ class anim_t(object):
 
     @start_cb_called.setter
     def start_cb_called(self, value: int) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
+    def early_apply(self) -> int:
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @early_apply.setter
+    def early_apply(self, value: int) -> None:
         """
         No Docstrings Yet
         """
@@ -3076,6 +3148,12 @@ class display_t(object):
         ...
     
     def get_buf_active(self, /) -> "draw_buf_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def rotate_area(self, area: "area_t", /) -> None:
         """
         No Docstrings Yet
         """
@@ -4243,7 +4321,7 @@ class style_t(object):
         """
         ...
     
-    def set_bitmap_mask_src(self, value: "image", /) -> None:
+    def set_bitmap_mask_src(self, value: Any, /) -> None:
         """
         No Docstrings Yet
         """
@@ -4871,7 +4949,7 @@ class draw_rect_dsc_t(object):
 
 class _draw_dsc_base_t_type(TypedDict, total=False):
     obj: "obj" = ...
-    part: int = ...
+    part: "part_t" = ...
     id1: int = ...
     id2: int = ...
     layer: "layer_t" = ...
@@ -4907,14 +4985,14 @@ class draw_dsc_base_t(object):
         ...
 
     @property
-    def part(self) -> int:
+    def part(self) -> "part_t":
        """
        No Docstrings Yet
        """ 
        ...
 
     @part.setter
-    def part(self, value: int) -> None:
+    def part(self, value: "part_t") -> None:
         """
         No Docstrings Yet
         """
@@ -5782,7 +5860,7 @@ class _draw_image_dsc_t_type(TypedDict, total=False):
     antialias: int = ...
     tile: int = ...
     sup: "draw_image_sup_t" = ...
-    original_area: "area_t" = ...
+    image_area: "area_t" = ...
     bitmap_mask_src: "image" = ...
 
 
@@ -6030,14 +6108,14 @@ class draw_image_dsc_t(object):
         ...
 
     @property
-    def original_area(self) -> "area_t":
+    def image_area(self) -> "area_t":
        """
        No Docstrings Yet
        """ 
        ...
 
-    @original_area.setter
-    def original_area(self, value: "area_t") -> None:
+    @image_area.setter
+    def image_area(self, value: "area_t") -> None:
         """
         No Docstrings Yet
         """
@@ -6151,6 +6229,12 @@ class color32_t(object):
         ...
     
     def color_premultiply(self, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def luminance(self, /) -> int:
         """
         No Docstrings Yet
         """
@@ -7497,6 +7581,7 @@ class _cache_t_type(TypedDict, total=False):
     size: int = ...
     ops: "cache_ops_t" = ...
     lock: "mutex_t" = ...
+    name: str = ...
 
 
 
@@ -7590,6 +7675,12 @@ class cache_t(object):
         """
         ...
     
+    def is_enabled(self, /) -> bool:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
     def set_compare_cb(self, compare_cb: "cache_compare_cb_t", cache: "cache_t", /) -> None:
         """
         No Docstrings Yet
@@ -7603,6 +7694,18 @@ class cache_t(object):
         ...
     
     def set_free_cb(self, free_cb: Callable, cache: "cache_t", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def set_name(self, name: str, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def get_name(self, /) -> str:
         """
         No Docstrings Yet
         """
@@ -7692,6 +7795,20 @@ class cache_t(object):
         """
         ...
 
+    @property
+    def name(self) -> str:
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @name.setter
+    def name(self, value: str) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
 
 
 
@@ -7737,6 +7854,40 @@ class cache_ops_t(object):
         ...
 
     __SIZE__: ClassVar[int] = ...
+
+
+
+class _cache_slot_size_t_type(TypedDict, total=False):
+    size: int = ...
+
+
+
+class cache_slot_size_t(object):
+    """
+    No Docstrings Yet
+    """
+    def __init__(self, args: Optional[_cache_slot_size_t_type] = dict(), /) -> "cache_slot_size_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    __SIZE__: ClassVar[int] = ...
+
+    @property
+    def size(self) -> int:
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @size.setter
+    def size(self, value: int) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
 
 
 
@@ -8261,6 +8412,12 @@ class color16_t(object):
         """
         ...
     
+    def luminance(self, /) -> int:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
     @property
     def blue(self) -> int:
        """
@@ -8741,6 +8898,80 @@ class rb_node_t(object):
         """
         ...
 
+
+
+
+class _draw_buf_handlers_t_type(TypedDict, total=False):
+    ...
+
+
+
+class draw_buf_handlers_t(object):
+    """
+    No Docstrings Yet
+    """
+    def __init__(self, args: Optional[_draw_buf_handlers_t_type] = dict(), /) -> "draw_buf_handlers_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    __SIZE__: ClassVar[int] = ...
+
+    def init_with_default_handlers(self, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def init_handlers(self, buf_malloc_cb: "draw_buf_malloc_cb", buf_free_cb: "draw_buf_free_cb", align_pointer_cb: "draw_buf_align_cb", invalidate_cache_cb: "draw_buf_cache_operation_cb", flush_cache_cb: "draw_buf_cache_operation_cb", width_to_stride_cb: "draw_buf_width_to_stride_cb", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def align_user(self, buf: Any, color_format: "color_format_t", /) -> Any:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def invalidate_cache_user(self, draw_buf: "draw_buf_t", area: "area_t", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def flush_cache_user(self, draw_buf: "draw_buf_t", area: "area_t", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def width_to_stride_user(self, w: int, color_format: "color_format_t", /) -> int:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def create_user(self, w: int, h: int, cf: "color_format_t", stride: int, /) -> "draw_buf_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def dup_user(self, draw_buf: "draw_buf_t", /) -> "draw_buf_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def destroy_user(self, buf: "draw_buf_t", /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
 
 
 
@@ -12181,25 +12412,6 @@ class sqrt_res_t(object):
 
 
 
-class _draw_buf_handlers_t_type(TypedDict, total=False):
-    ...
-
-
-
-class draw_buf_handlers_t(object):
-    """
-    No Docstrings Yet
-    """
-    def __init__(self, args: Optional[_draw_buf_handlers_t_type] = dict(), /) -> "draw_buf_handlers_t":
-        """
-        No Docstrings Yet
-        """
-        ...
-
-    __SIZE__: ClassVar[int] = ...
-
-
-
 class _global_t_type(TypedDict, total=False):
     inited: bool = ...
     deinit_in_progress: bool = ...
@@ -12227,7 +12439,11 @@ class _global_t_type(TypedDict, total=False):
     anim_state: "anim_state_t" = ...
     tick_state: "tick_state_t" = ...
     draw_buf_handlers: "draw_buf_handlers_t" = ...
+    font_draw_buf_handlers: "draw_buf_handlers_t" = ...
+    image_cache_draw_buf_handlers: "draw_buf_handlers_t" = ...
     img_decoder_ll: "ll_t" = ...
+    img_cache: "cache_t" = ...
+    img_header_cache: "cache_t" = ...
     draw_info: "draw_global_info_t" = ...
 
 
@@ -12607,6 +12823,34 @@ class global_t(object):
         ...
 
     @property
+    def font_draw_buf_handlers(self) -> "draw_buf_handlers_t":
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @font_draw_buf_handlers.setter
+    def font_draw_buf_handlers(self, value: "draw_buf_handlers_t") -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
+    def image_cache_draw_buf_handlers(self) -> "draw_buf_handlers_t":
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @image_cache_draw_buf_handlers.setter
+    def image_cache_draw_buf_handlers(self, value: "draw_buf_handlers_t") -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
     def img_decoder_ll(self) -> "ll_t":
        """
        No Docstrings Yet
@@ -12615,6 +12859,34 @@ class global_t(object):
 
     @img_decoder_ll.setter
     def img_decoder_ll(self, value: "ll_t") -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
+    def img_cache(self) -> "cache_t":
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @img_cache.setter
+    def img_cache(self, value: "cache_t") -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+
+    @property
+    def img_header_cache(self) -> "cache_t":
+       """
+       No Docstrings Yet
+       """ 
+       ...
+
+    @img_header_cache.setter
+    def img_header_cache(self, value: "cache_t") -> None:
         """
         No Docstrings Yet
         """
@@ -13187,721 +13459,721 @@ class obj(object):
         """
         ...
     
-    def get_style_width(self, part: int, /) -> int:
+    def get_style_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_min_width(self, part: int, /) -> int:
+    def get_style_min_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_max_width(self, part: int, /) -> int:
+    def get_style_max_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_height(self, part: int, /) -> int:
+    def get_style_height(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_min_height(self, part: int, /) -> int:
+    def get_style_min_height(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_max_height(self, part: int, /) -> int:
+    def get_style_max_height(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_length(self, part: int, /) -> int:
+    def get_style_length(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_x(self, part: int, /) -> int:
+    def get_style_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_y(self, part: int, /) -> int:
+    def get_style_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_align(self, part: int, /) -> "align_t":
+    def get_style_align(self, part: "part_t", /) -> "align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_width(self, part: int, /) -> int:
+    def get_style_transform_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_height(self, part: int, /) -> int:
+    def get_style_transform_height(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_translate_x(self, part: int, /) -> int:
+    def get_style_translate_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_translate_y(self, part: int, /) -> int:
+    def get_style_translate_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_scale_x(self, part: int, /) -> int:
+    def get_style_transform_scale_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_scale_y(self, part: int, /) -> int:
+    def get_style_transform_scale_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_rotation(self, part: int, /) -> int:
+    def get_style_transform_rotation(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_pivot_x(self, part: int, /) -> int:
+    def get_style_transform_pivot_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_pivot_y(self, part: int, /) -> int:
+    def get_style_transform_pivot_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_skew_x(self, part: int, /) -> int:
+    def get_style_transform_skew_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_skew_y(self, part: int, /) -> int:
+    def get_style_transform_skew_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_top(self, part: int, /) -> int:
+    def get_style_pad_top(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_bottom(self, part: int, /) -> int:
+    def get_style_pad_bottom(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_left(self, part: int, /) -> int:
+    def get_style_pad_left(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_right(self, part: int, /) -> int:
+    def get_style_pad_right(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_row(self, part: int, /) -> int:
+    def get_style_pad_row(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_pad_column(self, part: int, /) -> int:
+    def get_style_pad_column(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_margin_top(self, part: int, /) -> int:
+    def get_style_margin_top(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_margin_bottom(self, part: int, /) -> int:
+    def get_style_margin_bottom(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_margin_left(self, part: int, /) -> int:
+    def get_style_margin_left(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_margin_right(self, part: int, /) -> int:
+    def get_style_margin_right(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_color(self, part: int, /) -> "color_t":
+    def get_style_bg_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_bg_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_opa(self, part: int, /) -> "opa_t":
+    def get_style_bg_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad_color(self, part: int, /) -> "color_t":
+    def get_style_bg_grad_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_bg_grad_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad_dir(self, part: int, /) -> "grad_dir_t":
+    def get_style_bg_grad_dir(self, part: "part_t", /) -> "grad_dir_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_main_stop(self, part: int, /) -> int:
+    def get_style_bg_main_stop(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad_stop(self, part: int, /) -> int:
+    def get_style_bg_grad_stop(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_main_opa(self, part: int, /) -> "opa_t":
+    def get_style_bg_main_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad_opa(self, part: int, /) -> "opa_t":
+    def get_style_bg_grad_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_grad(self, part: int, /) -> "grad_dsc_t":
+    def get_style_bg_grad(self, part: "part_t", /) -> "grad_dsc_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_src(self, part: int, /) -> Any:
+    def get_style_bg_image_src(self, part: "part_t", /) -> Any:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_opa(self, part: int, /) -> "opa_t":
+    def get_style_bg_image_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_recolor(self, part: int, /) -> "color_t":
+    def get_style_bg_image_recolor(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_recolor_filtered(self, part: int, /) -> "color_t":
+    def get_style_bg_image_recolor_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_recolor_opa(self, part: int, /) -> "opa_t":
+    def get_style_bg_image_recolor_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bg_image_tiled(self, part: int, /) -> bool:
+    def get_style_bg_image_tiled(self, part: "part_t", /) -> bool:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_color(self, part: int, /) -> "color_t":
+    def get_style_border_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_border_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_opa(self, part: int, /) -> "opa_t":
+    def get_style_border_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_width(self, part: int, /) -> int:
+    def get_style_border_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_side(self, part: int, /) -> "border_side_t":
+    def get_style_border_side(self, part: "part_t", /) -> "border_side_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_border_post(self, part: int, /) -> bool:
+    def get_style_border_post(self, part: "part_t", /) -> bool:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_outline_width(self, part: int, /) -> int:
+    def get_style_outline_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_outline_color(self, part: int, /) -> "color_t":
+    def get_style_outline_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_outline_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_outline_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_outline_opa(self, part: int, /) -> "opa_t":
+    def get_style_outline_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_outline_pad(self, part: int, /) -> int:
+    def get_style_outline_pad(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_width(self, part: int, /) -> int:
+    def get_style_shadow_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_offset_x(self, part: int, /) -> int:
+    def get_style_shadow_offset_x(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_offset_y(self, part: int, /) -> int:
+    def get_style_shadow_offset_y(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_spread(self, part: int, /) -> int:
+    def get_style_shadow_spread(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_color(self, part: int, /) -> "color_t":
+    def get_style_shadow_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_shadow_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_shadow_opa(self, part: int, /) -> "opa_t":
+    def get_style_shadow_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_image_opa(self, part: int, /) -> "opa_t":
+    def get_style_image_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_image_recolor(self, part: int, /) -> "color_t":
+    def get_style_image_recolor(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_image_recolor_filtered(self, part: int, /) -> "color_t":
+    def get_style_image_recolor_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_image_recolor_opa(self, part: int, /) -> "opa_t":
+    def get_style_image_recolor_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_width(self, part: int, /) -> int:
+    def get_style_line_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_dash_width(self, part: int, /) -> int:
+    def get_style_line_dash_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_dash_gap(self, part: int, /) -> int:
+    def get_style_line_dash_gap(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_rounded(self, part: int, /) -> bool:
+    def get_style_line_rounded(self, part: "part_t", /) -> bool:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_color(self, part: int, /) -> "color_t":
+    def get_style_line_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_line_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_line_opa(self, part: int, /) -> "opa_t":
+    def get_style_line_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_width(self, part: int, /) -> int:
+    def get_style_arc_width(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_rounded(self, part: int, /) -> bool:
+    def get_style_arc_rounded(self, part: "part_t", /) -> bool:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_color(self, part: int, /) -> "color_t":
+    def get_style_arc_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_arc_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_opa(self, part: int, /) -> "opa_t":
+    def get_style_arc_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_arc_image_src(self, part: int, /) -> Any:
+    def get_style_arc_image_src(self, part: "part_t", /) -> Any:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_color(self, part: int, /) -> "color_t":
+    def get_style_text_color(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_color_filtered(self, part: int, /) -> "color_t":
+    def get_style_text_color_filtered(self, part: "part_t", /) -> "color_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_opa(self, part: int, /) -> "opa_t":
+    def get_style_text_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_font(self, part: int, /) -> "font_t":
+    def get_style_text_font(self, part: "part_t", /) -> "font_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_letter_space(self, part: int, /) -> int:
+    def get_style_text_letter_space(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_line_space(self, part: int, /) -> int:
+    def get_style_text_line_space(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_decor(self, part: int, /) -> "text_decor_t":
+    def get_style_text_decor(self, part: "part_t", /) -> "text_decor_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_text_align(self, part: int, /) -> "text_align_t":
+    def get_style_text_align(self, part: "part_t", /) -> "text_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_radius(self, part: int, /) -> int:
+    def get_style_radius(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_clip_corner(self, part: int, /) -> bool:
+    def get_style_clip_corner(self, part: "part_t", /) -> bool:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_opa(self, part: int, /) -> "opa_t":
+    def get_style_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_opa_layered(self, part: int, /) -> "opa_t":
+    def get_style_opa_layered(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_color_filter_dsc(self, part: int, /) -> "color_filter_dsc_t":
+    def get_style_color_filter_dsc(self, part: "part_t", /) -> "color_filter_dsc_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_color_filter_opa(self, part: int, /) -> "opa_t":
+    def get_style_color_filter_opa(self, part: "part_t", /) -> "opa_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_anim(self, part: int, /) -> "anim_t":
+    def get_style_anim(self, part: "part_t", /) -> "anim_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_anim_duration(self, part: int, /) -> int:
+    def get_style_anim_duration(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transition(self, part: int, /) -> "style_transition_dsc_t":
+    def get_style_transition(self, part: "part_t", /) -> "style_transition_dsc_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_blend_mode(self, part: int, /) -> "blend_mode_t":
+    def get_style_blend_mode(self, part: "part_t", /) -> "blend_mode_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_layout(self, part: int, /) -> int:
+    def get_style_layout(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_base_dir(self, part: int, /) -> "base_dir_t":
+    def get_style_base_dir(self, part: "part_t", /) -> "base_dir_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_bitmap_mask_src(self, part: int, /) -> "image":
+    def get_style_bitmap_mask_src(self, part: "part_t", /) -> Any:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_rotary_sensitivity(self, part: int, /) -> int:
+    def get_style_rotary_sensitivity(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_flex_flow(self, part: int, /) -> "flex_flow_t":
+    def get_style_flex_flow(self, part: "part_t", /) -> "flex_flow_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_flex_main_place(self, part: int, /) -> "flex_align_t":
+    def get_style_flex_main_place(self, part: "part_t", /) -> "flex_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_flex_cross_place(self, part: int, /) -> "flex_align_t":
+    def get_style_flex_cross_place(self, part: "part_t", /) -> "flex_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_flex_track_place(self, part: int, /) -> "flex_align_t":
+    def get_style_flex_track_place(self, part: "part_t", /) -> "flex_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_flex_grow(self, part: int, /) -> int:
+    def get_style_flex_grow(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_column_dsc_array(self, part: int, /) -> List[int]:
+    def get_style_grid_column_dsc_array(self, part: "part_t", /) -> List[int]:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_column_align(self, part: int, /) -> "grid_align_t":
+    def get_style_grid_column_align(self, part: "part_t", /) -> "grid_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_row_dsc_array(self, part: int, /) -> List[int]:
+    def get_style_grid_row_dsc_array(self, part: "part_t", /) -> List[int]:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_row_align(self, part: int, /) -> "grid_align_t":
+    def get_style_grid_row_align(self, part: "part_t", /) -> "grid_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_column_pos(self, part: int, /) -> int:
+    def get_style_grid_cell_column_pos(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_x_align(self, part: int, /) -> "grid_align_t":
+    def get_style_grid_cell_x_align(self, part: "part_t", /) -> "grid_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_column_span(self, part: int, /) -> int:
+    def get_style_grid_cell_column_span(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_row_pos(self, part: int, /) -> int:
+    def get_style_grid_cell_row_pos(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_y_align(self, part: int, /) -> "grid_align_t":
+    def get_style_grid_cell_y_align(self, part: "part_t", /) -> "grid_align_t":
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_grid_cell_row_span(self, part: int, /) -> int:
+    def get_style_grid_cell_row_span(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
@@ -13961,37 +14233,37 @@ class obj(object):
         """
         ...
     
-    def get_style_space_left(self, part: int, /) -> int:
+    def get_style_space_left(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_space_right(self, part: int, /) -> int:
+    def get_style_space_right(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_space_top(self, part: int, /) -> int:
+    def get_style_space_top(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_space_bottom(self, part: int, /) -> int:
+    def get_style_space_bottom(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_scale_x_safe(self, part: int, /) -> int:
+    def get_style_transform_scale_x_safe(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
         ...
     
-    def get_style_transform_scale_y_safe(self, part: int, /) -> int:
+    def get_style_transform_scale_y_safe(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
@@ -15251,7 +15523,7 @@ class obj(object):
         """
         ...
     
-    def set_style_bitmap_mask_src(self, value: "image", selector: "style_selector_t", /) -> None:
+    def set_style_bitmap_mask_src(self, value: Any, selector: "style_selector_t", /) -> None:
         """
         No Docstrings Yet
         """
@@ -15365,37 +15637,37 @@ class obj(object):
         """
         ...
     
-    def init_draw_rect_dsc(self, part: int, draw_dsc: "draw_rect_dsc_t", /) -> None:
+    def init_draw_rect_dsc(self, part: "part_t", draw_dsc: "draw_rect_dsc_t", /) -> None:
         """
         No Docstrings Yet
         """
         ...
     
-    def init_draw_label_dsc(self, part: int, draw_dsc: "draw_label_dsc_t", /) -> None:
+    def init_draw_label_dsc(self, part: "part_t", draw_dsc: "draw_label_dsc_t", /) -> None:
         """
         No Docstrings Yet
         """
         ...
     
-    def init_draw_image_dsc(self, part: int, draw_dsc: "draw_image_dsc_t", /) -> None:
+    def init_draw_image_dsc(self, part: "part_t", draw_dsc: "draw_image_dsc_t", /) -> None:
         """
         No Docstrings Yet
         """
         ...
     
-    def init_draw_line_dsc(self, part: int, draw_dsc: "draw_line_dsc_t", /) -> None:
+    def init_draw_line_dsc(self, part: "part_t", draw_dsc: "draw_line_dsc_t", /) -> None:
         """
         No Docstrings Yet
         """
         ...
     
-    def init_draw_arc_dsc(self, part: int, draw_dsc: "draw_arc_dsc_t", /) -> None:
+    def init_draw_arc_dsc(self, part: "part_t", draw_dsc: "draw_arc_dsc_t", /) -> None:
         """
         No Docstrings Yet
         """
         ...
     
-    def calculate_ext_draw_size(self, part: int, /) -> int:
+    def calculate_ext_draw_size(self, part: "part_t", /) -> int:
         """
         No Docstrings Yet
         """
@@ -15629,6 +15901,12 @@ class obj(object):
         """
         ...
     
+    def bind_checked(self, subject: "subject_t", /) -> "observer_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+    
 
 class image(obj):
     """
@@ -15704,7 +15982,7 @@ class image(obj):
         """
         ...
     
-    def cache_drop(self, /) -> None:
+    def cache_init(self, /) -> "result_t":
         """
         No Docstrings Yet
         """
@@ -15716,13 +15994,37 @@ class image(obj):
         """
         ...
     
-    def header_cache_drop(self, /) -> None:
+    def cache_drop(self, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def cache_is_enabled(self, /) -> bool:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def header_cache_init(self, /) -> "result_t":
         """
         No Docstrings Yet
         """
         ...
     
     def header_cache_resize(self, evict_now: bool, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def header_cache_drop(self, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def header_cache_is_enabled(self, /) -> bool:
         """
         No Docstrings Yet
         """
@@ -15794,7 +16096,7 @@ class image(obj):
         """
         ...
     
-    def decoder_set_cache_free_cb(self, cache_free_cb: "cache_free_cb_t", /) -> None:
+    def decoder_add_to_cache(self, search_key: "image", decoded: "draw_buf_t", decoder: "image", /) -> "cache_entry_t":
         """
         No Docstrings Yet
         """
@@ -16377,12 +16679,6 @@ class button(obj):
     No Docstrings Yet
     """
     def __init__(self, parent: "obj", /) -> "button":
-        """
-        No Docstrings Yet
-        """
-        ...
-    
-    def bind_checked(self, subject: "subject_t", /) -> "observer_t":
         """
         No Docstrings Yet
         """
@@ -17295,7 +17591,37 @@ class line(obj):
         """
         ...
     
+    def set_points_mutable(self, points: List["point_precise_t"], point_num: int, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
     def set_y_invert(self, antialias: bool, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def get_points(self, /) -> "point_precise_t":
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def get_point_count(self, /) -> int:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def is_point_array_mutable(self, /) -> bool:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
+    def get_points_mutable(self, /) -> "point_precise_t":
         """
         No Docstrings Yet
         """
@@ -17748,7 +18074,7 @@ class scale(obj):
         """
         ...
     
-    def section_set_style(self, part: int, section_part_style: "style_t", /) -> None:
+    def section_set_style(self, part: "part_t", section_part_style: "style_t", /) -> None:
         """
         No Docstrings Yet
         """
@@ -18404,6 +18730,12 @@ class table(obj):
         """
         ...
     
+    def set_selected_cell(self, row: int, col: int, /) -> None:
+        """
+        No Docstrings Yet
+        """
+        ...
+    
     def get_cell_value(self, row: int, col: int, /) -> str:
         """
         No Docstrings Yet
@@ -18422,7 +18754,7 @@ class table(obj):
         """
         ...
     
-    def get_column_width(self, part: int, /) -> int:
+    def get_column_width(self, col: int, /) -> int:
         """
         No Docstrings Yet
         """
@@ -19023,6 +19355,7 @@ font_montserrat_12: "font_t" = ...
 font_montserrat_14: "font_t" = ...
 font_montserrat_16: "font_t" = ...
 font_montserrat_18: "font_t" = ...
+font_montserrat_20: "font_t" = ...
 style_const_prop_id_inv: "_mp_int_wrapper" = ...
 _nesting: "_mp_int_wrapper" = ...
 
@@ -19118,6 +19451,13 @@ def color_white() -> "color_t":
 
 
 def color_black() -> "color_t":
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def color24_luminance(c: Union[str, List[int]], /) -> int:
     """
     No Docstrings Yet
     """
@@ -19264,6 +19604,34 @@ def is_initialized() -> bool:
     ...
 
 
+def memcpy(dst: Any, src: Any, len: int, /) -> Any:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def memset(dst: Any, v: int, len: int, /) -> None:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def memmove(dst: Any, src: Any, len: int, /) -> Any:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def memcmp(p1: Any, p2: Any, len: int, /) -> int:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
 def strlen(str: str, /) -> int:
     """
     No Docstrings Yet
@@ -19271,14 +19639,42 @@ def strlen(str: str, /) -> int:
     ...
 
 
-def strncpy(strDest: str, strSource: str, count: int, /) -> str:
+def strncpy(dst: str, src: str, dest_size: int, /) -> str:
     """
     No Docstrings Yet
     """
     ...
 
 
-def strcpy(strDestination: str, strSource: str, /) -> str:
+def strcpy(dst: str, src: str, /) -> str:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def strcmp(s1: str, s2: str, /) -> int:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def strdup(src: str, /) -> str:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def strcat(dst: str, src: str, /) -> str:
+    """
+    No Docstrings Yet
+    """
+    ...
+
+
+def strncat(dst: str, src: str, dest_size: int, /) -> str:
     """
     No Docstrings Yet
     """
@@ -19370,41 +19766,6 @@ def mem_test_core() -> "result_t":
 
 
 def mem_test() -> "result_t":
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def memcpy(dst: Any, src: Any, len: int, /) -> Any:
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def memset(dst: Any, v: int, len: int, /) -> None:
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def memmove(dst: Any, src: Any, len: int, /) -> Any:
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def strcmp(s1: str, s2: str, /) -> int:
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def strdup(src: str, /) -> str:
     """
     No Docstrings Yet
     """
@@ -20315,27 +20676,6 @@ def snapshot_reshape_draw_buf(obj: "obj", draw_buf: "draw_buf_t", /) -> "result_
 
 
 def snapshot_take_to_draw_buf(obj: "obj", cf: "color_format_t", draw_buf: "draw_buf_t", /) -> "result_t":
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def sysmon_create(disp: "display_t", /) -> "obj":
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def sysmon_show_performance(disp: "display_t", /) -> None:
-    """
-    No Docstrings Yet
-    """
-    ...
-
-
-def sysmon_hide_performance(disp: "display_t", /) -> None:
     """
     No Docstrings Yet
     """

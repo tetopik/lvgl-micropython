@@ -28,4 +28,4 @@ python3 make.py esp32 clean BOARD=LOLIN_S2_MINI --enable-uart-repl=n --enable-cd
 mv build/lvgl_micropy_LOLIN_S2_MINI-4.bin $BUILD_PATH/LOLIN_S2_MINI-4M_$BUILD_TAGS.bin &&\
 
 python3 make.py esp32 clean BOARD=ESP32_GENERIC --optimize-size DISPLAY=ili9341 INDEV=xpt2046 &&\
-mv build/lvgl_micropy_ESP32_GENERIC-4.bin $BUILD_PATH/ESP32_GENERIC-4M_$BUILD_TAGS.bin &&\
+mv build/lvgl_micropy_ESP32_GENERIC-4.bin $BUILD_PATH/ESP32_GENERIC-4M_$BUILD_TAGS.bin

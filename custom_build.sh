@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-LV_VER="9.5.0"
-MP_VER="1.29.0"
+LV_VER="9.6.0"
+MP_VER="1.30.0-preview"
 IDF_VER="5.5.5"
 BUILD_TAGS=mp$MP_VER"_lv$LV_VER"_idf$IDF_VER
 BUILD_PATH=firmwares/$BUILD_TAGS

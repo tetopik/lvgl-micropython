@@ -9,6 +9,8 @@ mkdir $BUILD_PATH
 
 if [ "$LV_VER" == "9.1.0" ]; then
     git update-index --cacheinfo 160000,657fccd132ea1028d4d28964867fbd02373afc76,lib/lvgl
+else if [ "$LV_VER" == "9.6.0" ]; then
+    cp pycparser_monkeypatch.py lib/lvgl/scripts/gen_json/pycparser_monkeypatch.py
 fi
 
 DRIVERS="DISPLAY=ssd1306 DISPLAY=GC9A01 DISPLAY=ST7735 DISPLAY=st7789 DISPLAY=ili9341 DISPLAY=ili9488 INDEV=xpt2046"

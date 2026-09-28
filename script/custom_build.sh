@@ -7,13 +7,24 @@ BUILD_TAGS=mp$MP_VER"_lv$LV_VER"_idf$IDF_VER
 BUILD_PATH=firmwares/$BUILD_TAGS
 mkdir $BUILD_PATH
 
-if [ "$LV_VER" == "9.1.0" ]; then
-    git update-index --cacheinfo 160000,657fccd132ea1028d4d28964867fbd02373afc76,lib/lvgl
-else if [ "$LV_VER" == "9.6.0" ]; then
-    cp pycparser_monkeypatch.py lib/lvgl/scripts/gen_json/pycparser_monkeypatch.py
-fi
+<<patches
+# to build with lv9.1.1
+git update-index --cacheinfo 160000,657fccd132ea1028d4d28964867fbd02373afc76,lib/lvgl
 
-DRIVERS="DISPLAY=ssd1306 DISPLAY=GC9A01 DISPLAY=ST7735 DISPLAY=st7789 DISPLAY=ili9341 DISPLAY=ili9488 INDEV=xpt2046"
+# on lv9.6.0 to fix ValueError: invalid literal for int() with base 16: '0xX1FFFFFFF'
+# in "lib/lvgl/scripts/gen_json/pycparser_monkeypatch.py", line 412, in to_dict
+# f'0x{hex(int(member["value"], 16))[2:].zfill(hex_len).upper()}'
+cp script/pycparser_monkeypatch.py lib/lvgl/scripts/gen_json/pycparser_monkeypatch.py
+
+# apply PR task_handler: fix LVGL time running ~2x fast (double tick_inc)- #607
+wget -O api_drivers/common_api_drivers/frozen/other/task_handler.py \
+https://raw.githubusercontent.com/bitcoin3us/lvgl_micropython/333c680c9aa8e9f6e296754e13776719186c4ec0/api_drivers/common_api_drivers/frozen/other/task_handler.py
+
+# fix touch_calibrate.py:83 lv syntax for v9.6 [lv.SCREEN_LOAD_ANIM -> lv.SCR_LOAD_ANIM]
+cp script/touch_calibrate.py api_drivers/py_api_drivers/frozen/indev/touch_calibration/touch_calibrate.py
+patches
+
+DRIVERS="DISPLAY=GC9A01 DISPLAY=ST7735 DISPLAY=st7789 DISPLAY=ili9341 DISPLAY=ili9488 INDEV=xpt2046"
 
 python3 make.py esp32 clean BOARD=ESP32_GENERIC_S3 BOARD_VARIANT=SPIRAM_OCT --flash-size=16 --enable-uart-repl=n --enable-cdc-repl=y --enable-jtag-repl=n $DRIVERS &&\
 mv build/lvgl_micropy_ESP32_GENERIC_S3-SPIRAM_OCT-16.bin $BUILD_PATH/ESP32_GENERIC_S3-SPIRAM_OCT-CDC-16M_$BUILD_TAGS.bin &&\
